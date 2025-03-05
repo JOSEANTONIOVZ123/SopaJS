@@ -1,12 +1,29 @@
 import chalk from 'chalk';
 import readline from 'readline';
+import fs from 'fs';
+
+// Función para obtener palabras desde el JSON
+function obtenerPalabra() {
+    try {
+        const data = fs.readFileSync('palabrasInfantiles.json', 'utf-8');
+        const jsonData = JSON.parse(data);
+        return jsonData.palabras.map(word => word.toUpperCase()); // Convertir palabras a mayúsculas
+    } catch (error) {
+        console.error("Error al leer el archivo JSON:", error);
+        return [];
+    }
+}
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-const words = ["MARIPOSA", "TEJON", "BAYA"];
+// Obtener palabras del JSON
+const allWords = obtenerPalabra();
+const words = allWords.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+
 const gridSize = 10;
 let grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
 let foundWords = new Set();
@@ -117,5 +134,3 @@ function askForWord() {
 }
 
 askForWord();
-
-
